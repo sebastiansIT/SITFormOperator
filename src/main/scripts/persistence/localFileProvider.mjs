@@ -61,8 +61,11 @@ class LocalFileProvider extends AbstractPersistenceProvider {
 
     if (fileNamePattern) {
       const element = document.getElementById(fileNamePattern.content)
-      if (element && element.value && element.value.trim()) {
-        fileName = element.value || fileName
+      if (element) {
+        const text = element.value || element.textContent
+        if (text && text.trim()) {
+          fileName = text || fileName
+        }
       }
     }
 

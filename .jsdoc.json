@@ -1,0 +1,27 @@
+{
+    "source": {
+        "include": "src/main/scripts",
+        "includePattern": "\\.(js|mjs)$"
+    },
+    "plugins": [
+      "plugins/markdown"
+    ],
+    "sourceType": "module",
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": ["jsdoc","closure"]
+    },
+    "opts": {
+        "template": "node_modules/docdash",
+        "encoding": "utf8",
+        "destination": "target/doc/",
+        "readme": "src/main/scripts/README.md",
+        "recurse": true,
+        "verbose": true,
+        "private": true
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false
+    }
+}

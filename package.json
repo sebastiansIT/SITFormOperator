@@ -1,0 +1,45 @@
+{
+  "name": "@sebastiansit/formoperator",
+  "version": "1.0.0",
+  "description": "Toolbox for managing web formulars.",
+  "keywords": [
+    "web",
+    "webcomponent"
+  ],
+  "author": {
+    "name": "Sebastian Spautz",
+    "email": "formoperator@sebastiansit.de",
+    "url": "http://human-injection.de/"
+  },
+  "license": "GPL-3.0-or-later",
+  "browserslist": [
+    "last 2 versions",
+    "not dead"
+  ],
+  "files": [
+    "target/bundle.js"
+  ],
+  "devDependencies": {
+    "docdash": "^1.2.0",
+    "eslint": "^7.23.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsdoc": "^35.5.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "jest": "^27.0.6",
+    "jsdoc": "^3.6.6",
+    "rollup": "^2.44.0",
+    "rollup-jest": "^1.1.1"
+  },
+  "scripts": {
+    "lint:js": "eslint src/main/**/*.mjs",
+    "test:js": "jest --config .jest.config.js",
+    "watch:js": "npm run test:js -- --watchAll",
+    "build:js": "npm run lint:js && npm run test:js && rollup --config .rollup.config.js",
+    "doc": "jsdoc -c .jsdoc.json",
+    "watch": "npm run watch:js",
+    "test": "npm run test:js",
+    "build": "npm run doc && npm run build:js"
+  }
+}

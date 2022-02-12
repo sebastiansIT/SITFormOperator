@@ -1,3 +1,7 @@
+# Own Stuff
+workspace.code-workspace
+target
+
 # Logs
 logs
 *.log

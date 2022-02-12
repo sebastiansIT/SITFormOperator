@@ -1,0 +1,134 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Test page ArrayOperatorTest</title>
+  <script type="module">
+    import * as op from '../../../main/scripts/operators/arrayOperator.mjs'
+
+    op.init()
+
+    op.importData(document.getElementById('populate'), [
+      {'text': 'Text 1', 'date': '1928-02-14', 'range': 39},
+      {'text': 'Text 2', 'date': '2019-12-30', 'range': 12}
+    ])
+    console.log(op.exportData(document.getElementById('populate')))
+
+    op.importData(document.getElementById('importSimple'), [
+      'first', 'second', 'third'
+    ])
+
+    const fqkForm = document.getElementById('fqnSimple')
+    const fqkElementInside = document.getElementById('fqn_2')
+    const fqkElementOutsideItemContainer = document.getElementById('fqn_3')
+    const fqkElementOutsideArray = document.getElementById('fqn_5')
+    const fqkElementOutsideForm = document.getElementById('fqn_6')
+
+    document.getElementById('getSimpleFQKs').addEventListener('click', () => {
+      document.getElementById('findSimpleFQKs').disabled = false
+      fqkElementInside.value = op.fullQualifiedKeyOf(fqkElementInside, fqkForm)
+      try {
+        fqkElementOutsideItemContainer.value = op.fullQualifiedKeyOf(fqkElementOutsideItemContainer, fqkForm)
+      } catch (error) {
+        fqkElementOutsideItemContainer.value = error
+      }
+      try {
+        fqkElementOutsideArray.value = op.fullQualifiedKeyOf(fqkElementOutsideArray, fqkForm)
+      } catch (error) {
+        fqkElementOutsideArray.value = error
+      }
+      try {
+        fqkElementOutsideForm.value = op.fullQualifiedKeyOf(fqkElementOutsideForm, fqkForm)
+      } catch (error) {
+        fqkElementOutsideForm.value = error
+      }
+    })
+
+    document.getElementById('findSimpleFQKs').addEventListener('click', () => {
+      op.elementBy(fqkElementInside.value, fqkForm).style.backgroundColor = 'green'
+    })
+  </script>
+</head>
+
+<body>
+  <h1>Manipulate Array</h1>
+  <form id="manipulateForm" action="#">
+    <div id="manipulate" data-arrayselector=".items">
+      <h2>An Array</h2>
+      <template>
+        <div>
+          <p id="name">Text</p>
+          <button class="arrayitemremove">Remove</button>
+        </div>
+      </template>
+      <div class="items">
+      </div>
+      <button class="arrayitemcreate">Add</button>
+    </div>
+  </form>
+
+  <h1>Populate Item</h1>
+  <form id="populateForm" action="#">
+    <div id="populate" data-arrayselector=".items">
+      <h2>An Array</h2>
+      <template>
+        <div>
+          <p id="name">Text</p>
+          <fieldset>
+            <legend>Legend {{nr}}</legend>
+            <label for="input_{{nr}}">Label</label>
+            <input id="input_{{nr}}" name="input_{{nr}}_name" data-exportkey="text" value="Text Value" />
+            <input name="date_{{nr}}" data-exportkey="date" type="data" aria-label="date {{nr}} label" value="2021-03-18" />
+            <input name="range_{{nr}}" data-exportkey="range" type="range" aria-labelledby="range_{{nr}}_label" value="17" />
+          </fieldset>
+          <button class="arrayitemremove">Remove</button>
+        </div>
+      </template>
+      <div class="items">
+      </div>
+      <button class="arrayitemcreate">Add</button>
+    </div>
+  </form>
+
+  <h1>Import Data</h1>
+  <form id="importData" action="#">
+    <div id="importSimple" data-arrayselector=".items">
+      <h2>An Array</h2>
+      <template>
+        <input type="text" name="simple_{{nr}}" data-exportkey="simple" />
+      </template>
+      <div class="items">
+        <input type="text" name="simple_1" data-exportkey="simple" />
+        <input type="text" name="simple_2" data-exportkey="simple" />
+        <input type="text" name="simple_3" data-exportkey="simple" />
+        <input type="text" name="simple_4" data-exportkey="simple" />
+      </div>
+      <button class="arrayitemcreate">Add</button>
+    </div>
+  </form>
+
+
+  <h1>Create FQK</h1>
+  <form id="createFQK" action="#">
+    <div id="fqnSimple" data-arrayselector=".items">
+      <h2>An Array</h2>
+      <template>
+        <div><input type="text" name="fqn_{{nr}}" data-exportkey="simple" /></div>
+      </template>
+      <div class="items">
+        <div><input type="text" name="fqn_1" data-exportkey="simple" /></div>
+        <div><input type="text" id="fqn_2" name="fqn_2" data-exportkey="simple" /></div>
+        <div><input type="text" name="fqn_4" data-exportkey="simple" /></div>
+      </div>
+      <input type="text" id="fqn_3" name="fqn_3" style="min-width: 60vw;" data-exportkey="simple" />
+      <button class="arrayitemcreate">Add</button>
+    </div>
+    <input type="text" id="fqn_5" name="fqn_5" style="min-width: 60vw;" data-exportkey="simple" />
+  </form>
+  <input type="text" id="fqn_6" name="fqn_6" style="min-width: 60vw;" data-exportkey="simple" />
+  <br/>
+  <button type="button" id="getSimpleFQKs">Get FQK</button>
+  <button type="button" id="findSimpleFQKs" disabled>Get entry by FQK</button>
+</body>
+</html>

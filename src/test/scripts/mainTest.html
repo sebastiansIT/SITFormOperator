@@ -1,0 +1,82 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Test page FormularOperatorTest</title>
+  <script type="module">
+    import * as main from '../../main/scripts/main.mjs'
+
+    main.save(document.getElementById('save'))
+  </script>
+</head>
+
+<body>
+  <h1>Export</h1>
+  <form id="save" action="#">
+    <input type="text" name="exportFormEntryDirect" value="testValue1" />
+    <fieldset>
+      <legend>A Fieldset</legend>
+      <input type="text" name="exportFormEntrySubElement" value="testValue2" />
+    </fieldset>
+    <p contenteditable="true" id="exportContentEditable">Editable Text</p>
+    <sit-select-image id="exportImageEditable" value="base64 coded editable image" />
+
+    <!-- Section -->
+    <section id="section1">
+      <h2>A section inside the formular</h2>
+      <input type="text" name="exportSectionEntryDirect" value="testValue3" />
+      <fieldset>
+        <legend>A Fieldset</legend>
+        <input type="text" name="exportSectionEntrySubElement" value="testValue4" />
+      </fieldset>
+    </section>
+    <section id="section2" data-exportkey="sectionwithsubsection">
+      <h2>A section with a sub section inside the formular</h2>
+      <section id="subsection1">
+        <fieldset>
+          <legend>A Fieldset</legend>
+          <input type="text" name="exportSectionSectionEntrySubElement1" value="testValue3-2" />
+        </fieldset>
+        <fieldset>
+          <legend>Another Fieldset</legend>
+          <input type="text" name="exportSectionSectionEntrySubElement2" value="testValue4-2" />
+        </fieldset>
+      </section>
+    </section>
+
+    <!-- Arrays -->
+    <div id="array1" data-arrayselector="ul">
+      <h2>An array inside the formular</h2>
+      <ul>
+        <li><input type="text" name="exportArrayEntryDirect" value="testValue5" /></li>
+        <li><fieldset>
+          <legend>A Fieldset</legend>
+          <input type="text" name="exportArrayEntrySubElement" value="testValue6" />
+        </fieldset></li>
+    </div>
+    <div id="array2" data-arrayselector="ul">
+      <h2>An array of arrays inside the formular</h2>
+      <ul>
+        <li data-exportkey="subarray1" data-arrayselector="ol">
+          <ol>
+            <li><input type="text" name="exportArrayArrayEntryDirect_1" data-exportkey="subarrayvalue" value="testValue7" /></li>
+            <li><input type="text" name="exportArrayArrayEntryDirect_2" data-exportkey="subarrayvalue" value="testValue8" /></li>
+          </ol>
+        </li>
+        <li data-exportkey="subarray2" data-arrayselector="ul">
+          <ul>
+            <li><input type="text" name="exportArrayArrayEntryDirect_3" data-exportkey="subarrayvalue" value="testValue9" /></li>
+            <li><input type="text" name="exportArrayArrayEntryDirect_4" data-exportkey="subarrayvalue" value="testValue10" /></li>
+          </ul>
+        </li>
+        <li data-exportkey="subarray3" data-arrayselector="div">
+          <div>
+            <input type="text" name="exportArrayArrayEntryDirect_5" data-exportkey="subarrayvalue" value="testValue11" />
+            <input type="text" name="exportArrayArrayEntryDirect_6" data-exportkey="subarrayvalue" value="testValue12" />
+          </div>
+        </li>
+    </div>
+  </form>
+</body>
+</html>

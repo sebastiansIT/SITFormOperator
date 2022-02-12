@@ -1,0 +1,279 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Test page FormularOperatorTest</title>
+  <meta name="filenamepattern" content="filename" />
+  <script type="module">
+    import * as op from '../../../main/scripts/operators/formOperator.mjs'
+
+    console.log(op.exportData(document.getElementById('export')))
+
+    console.log(op.keyOf(document.getElementById('import')))
+    op.importData(document.getElementById('import'), {
+      textInput: "textImportValue",
+      checkboxInput: {
+        checked: true,
+        disabled: false
+      },
+      radioInput: 'radioInput2Value',
+      dropdown: 'dropdownValue2',
+      multiselect: ['multiselect2', 'multiselect3'],
+      contenteditable: 'Primary Entry Text',
+      image: 'base64 coded image',
+
+      section: {
+        textInput: "textImportValue",
+        checkboxInput: {
+          checked: true,
+          disabled: false
+        },
+        radioInput: 'radioInput1Value',
+        dropdown: 'dropdownValue2',
+        multiselect: ['multiselect1', 'multiselect3'],
+        contenteditable: 'Section Text',
+
+        section: {
+          textInput: "textImportValue",
+          checkboxInput: {
+            checked: true,
+            disabled: true
+          },
+          radioInput: 'radioInput3Value',
+          dropdown: 'dropdownValue2',
+          multiselect: ['multiselect4', 'multiselect3'],
+          contenteditable: 'Sub Section Text'
+        },
+
+        array: [
+          {
+            textInput: "textImportValue",
+            checkboxInput: {
+              checked: true,
+              disabled: true
+            },
+            radioInput: 'radioInput3Value',
+            dropdown: 'dropdownValue2',
+            multiselect: ['multiselect4', 'multiselect3'],
+            contenteditable: 'ArrayItem1 Text'
+          },
+          {
+            textInput: "textImportValue",
+            checkboxInput: {
+              checked: true,
+              disabled: true
+            },
+            radioInput: 'radioInput3Value',
+            dropdown: 'dropdownValue2',
+            multiselect: ['multiselect4', 'multiselect3'],
+            contenteditable: 'ArrayItem2 Text'
+          }
+        ]
+      }
+    })
+  </script>
+</head>
+
+<body>
+  <input type="hidden" name="filename" id="filename" value="testValue1" />
+  <h1>Export</h1>
+  <form id="export" action="#">
+    <input type="text" name="exportFormEntryDirect" value="testValue1" />
+    <fieldset>
+      <legend>A Fieldset</legend>
+      <input type="text" name="exportFormEntrySubElement" value="testValue2" />
+    </fieldset>
+    <p contenteditable="true" id="exportContentEditable">Editable Text</p>
+    <sit-select-image id="exportImageEditable" value="base64 coded editable image" />
+
+    <!-- Section -->
+    <section id="section1">
+      <h2>A section inside the formular</h2>
+      <input type="text" name="exportSectionEntryDirect" value="testValue3" />
+      <fieldset>
+        <legend>A Fieldset</legend>
+        <input type="text" name="exportSectionEntrySubElement" value="testValue4" />
+      </fieldset>
+    </section>
+    <section id="section2" data-exportkey="sectionwithsubsection">
+      <h2>A section with a sub section inside the formular</h2>
+      <section id="subsection1">
+        <fieldset>
+          <legend>A Fieldset</legend>
+          <input type="text" name="exportSectionSectionEntrySubElement1" value="testValue3-2" />
+        </fieldset>
+        <fieldset>
+          <legend>Another Fieldset</legend>
+          <input type="text" name="exportSectionSectionEntrySubElement2" value="testValue4-2" />
+        </fieldset>
+      </section>
+    </section>
+
+    <!-- Arrays -->
+    <div id="array1" data-arrayselector="ul">
+      <h2>An array inside the formular</h2>
+      <ul>
+        <li><input type="text" name="exportArrayEntryDirect" value="testValue5" /></li>
+        <li><fieldset>
+          <legend>A Fieldset</legend>
+          <input type="text" name="exportArrayEntrySubElement" value="testValue6" />
+        </fieldset></li>
+    </div>
+    <div id="array2" data-arrayselector="ul">
+      <h2>An array of arrays inside the formular</h2>
+      <ul>
+        <li id="array2_1" data-arrayselector="ol">
+          <ol>
+            <li><input type="text" name="exportArrayArrayEntryDirect_1" data-exportkey="subarrayvalue" value="testValue7" /></li>
+            <li><input type="text" name="exportArrayArrayEntryDirect_2" data-exportkey="subarrayvalue" value="testValue8" /></li>
+          </ol>
+        </li>
+        <li id="array2_2" data-arrayselector="ul">
+          <ul>
+            <li><input type="text" name="exportArrayArrayEntryDirect_3" data-exportkey="subarrayvalue" value="testValue9" /></li>
+            <li><input type="text" name="exportArrayArrayEntryDirect_4" data-exportkey="subarrayvalue" value="testValue10" /></li>
+          </ul>
+        </li>
+        <li id="array2_3" data-arrayselector="div">
+          <div>
+            <input type="text" name="exportArrayArrayEntryDirect_5" data-exportkey="subarrayvalue" value="testValue11" />
+            <input type="text" name="exportArrayArrayEntryDirect_6" data-exportkey="subarrayvalue" value="testValue12" />
+          </div>
+        </li>
+    </div>
+  </form>
+
+  <h2>Import</h2>
+  <form id="import" action="#">
+    <input type="text" name="textInput" />
+    <input type="checkbox" id="checboxInput" name="checkboxInput" value="checkboxInputValue" />
+    <input type="radio" name="radioInput" id="radioInput1" value="radioInput1Value" />
+    <input type="radio" name="radioInput" id="radioInput2" value="radioInput2Value" />
+    <input type="radio" name="radioInput" id="radioInput3" value="radioInput3Value" />
+    <select name="dropdown">
+      <option value="dropdownValue1">Value 1</option>
+      <option value="dropdownValue2">Value 2</option>
+    </select>
+    <select name="multiselect" multiple="multiple">
+      <option value="multiselect1">Value 1</option>
+      <option value="multiselect2">Value 2</option>
+      <option value="multiselect3">Value 3</option>
+      <option value="multiselect4">Value 4</option>
+    </select>
+    <p contenteditable="true" id="contenteditable">Orginal</p>
+    <sit-select-image id="image" />
+
+    <section id="section" style="border: 1px solid black;">
+      <input type="text" name="textInputInSection" data-exportkey="textInput" />
+      <input type="checkbox" id="checboxInputInSection" name="checkboxInputInSection"
+        value="checkboxInputValue" data-exportkey="checkboxInput" />
+      <input type="radio" name="radioInputInSection"
+        id="radioInput1InSection" value="radioInput1Value"
+        data-exportkey="radioInput" />
+      <input type="radio" name="radioInputInSection"
+        id="radioInput2InSection" value="radioInput2Value"
+        data-exportkey="radioInput" />
+      <input type="radio" name="radioInputInSection"
+        id="radioInput3InSection" value="radioInput3Value"
+        data-exportkey="radioInput" />
+      <select name="dropdownInSection" data-exportkey="dropdown" >
+        <option value="dropdownValue1">Value 1</option>
+        <option value="dropdownValue2">Value 2</option>
+      </select>
+      <select name="multiselectInSection" data-exportkey="multiselect"
+        multiple="multiple">
+        <option value="multiselect1">Value 1</option>
+        <option value="multiselect2">Value 2</option>
+        <option value="multiselect3">Value 3</option>
+        <option value="multiselect4">Value 4</option>
+      </select>
+      <p contenteditable="true" id="contenteditableInSection" data-exportkey="contenteditable">Orginal</p>
+
+      <section id="subsection" data-exportkey="section" style="border: 1px dotted darkgreen;">
+        <input type="text" name="textInputInSubsection" data-exportkey="textInput" />
+        <input type="checkbox" id="checboxInputInSubsection" name="checkboxInputInSubsection"
+          value="checkboxInputValue" data-exportkey="checkboxInput" />
+        <input type="radio" name="radioInputInSubsection"
+          id="radioInput1InSubsection" value="radioInput1Value"
+          data-exportkey="radioInput" />
+        <input type="radio" name="radioInputInSubsection"
+          id="radioInput2InSubsection" value="radioInput2Value"
+          data-exportkey="radioInput" />
+        <input type="radio" name="radioInputInSubsection"
+          id="radioInput3InSubsection" value="radioInput3Value"
+          data-exportkey="radioInput" />
+        <select name="dropdownInSubsection" data-exportkey="dropdown" >
+          <option value="dropdownValue1">Value 1</option>
+          <option value="dropdownValue2">Value 2</option>
+        </select>
+        <select name="multiselectInSubsection" data-exportkey="multiselect"
+          multiple="multiple">
+          <option value="multiselect1">Value 1</option>
+          <option value="multiselect2">Value 2</option>
+          <option value="multiselect3">Value 3</option>
+          <option value="multiselect4">Value 4</option>
+        </select>
+        <p contenteditable="true" id="contenteditableInSubsection" data-exportkey="contenteditable">Orginal</p>
+      </section>
+
+      <div data-arrayselector=".arrayitemcontainer" id="array">
+        <div class="arrayitemcontainer">
+        <div class="arrayitem">
+          <input type="text" name="textInputInArrayItem1" data-exportkey="textInput" />
+          <input type="checkbox" id="checboxInputInArrayItem1" name="checkboxInputInArrayItem1"
+            value="checkboxInputValue" data-exportkey="checkboxInput" />
+          <input type="radio" name="radioInputInArrayItem1"
+            id="radioInput1InArrayItem1" value="radioInput1Value"
+            data-exportkey="radioInput" />
+          <input type="radio" name="radioInputInArrayItem1"
+            id="radioInput2InArrayItem1" value="radioInput2Value"
+            data-exportkey="radioInput" />
+          <input type="radio" name="radioInputInArrayItem1"
+            id="radioInput3InArrayItem1" value="radioInput3Value"
+            data-exportkey="radioInput" />
+          <select name="dropdownInArrayItem1" data-exportkey="dropdown" >
+            <option value="dropdownValue1">Value 1</option>
+            <option value="dropdownValue2">Value 2</option>
+          </select>
+          <select name="multiselectInArrayItem1" data-exportkey="multiselect"
+            multiple="multiple">
+            <option value="multiselect1">Value 1</option>
+            <option value="multiselect2">Value 2</option>
+            <option value="multiselect3">Value 3</option>
+            <option value="multiselect4">Value 4</option>
+          </select>
+          <p contenteditable="true" id="contenteditableInArrayItem1" data-exportkey="contenteditable">Orginal</p>
+        </div>
+        <div class="arrayitem">
+          <input type="text" name="textInputInArrayItem2" data-exportkey="textInput" />
+          <input type="checkbox" id="checboxInputInArrayItem2" name="checkboxInputInArrayItem2"
+            value="checkboxInputValue" data-exportkey="checkboxInput" />
+          <input type="radio" name="radioInputInArrayItem2"
+            id="radioInput1InArrayItem2" value="radioInput1Value"
+            data-exportkey="radioInput" />
+          <input type="radio" name="radioInputInArrayItem2"
+            id="radioInput2InArrayItem2" value="radioInput2Value"
+            data-exportkey="radioInput" />
+          <input type="radio" name="radioInputInArrayItem2"
+            id="radioInput3InArrayItem2" value="radioInput3Value"
+            data-exportkey="radioInput" />
+          <select name="dropdownInArrayItem2" data-exportkey="dropdown" >
+            <option value="dropdownValue1">Value 1</option>
+            <option value="dropdownValue2">Value 2</option>
+          </select>
+          <select name="multiselectInArrayItem2" data-exportkey="multiselect"
+            multiple="multiple">
+            <option value="multiselect1">Value 1</option>
+            <option value="multiselect2">Value 2</option>
+            <option value="multiselect3">Value 3</option>
+            <option value="multiselect4">Value 4</option>
+          </select>
+          <p contenteditable="true" id="contenteditableInArrayItem2" data-exportkey="contenteditable">Orginal</p>
+        </div>
+        </div>
+      </div>
+    </section>
+  </form>
+</body>
+</html>

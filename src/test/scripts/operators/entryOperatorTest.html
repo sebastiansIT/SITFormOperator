@@ -1,0 +1,60 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Test page EntryOperatorTest</title>
+  <script type="module">
+    import * as op from '../../../main/scripts/operators/entryOperator.mjs'
+
+    console.log(op.valueOf(document.getElementById('select1')))
+    console.log(op.valueOf(document.getElementById('select2')))
+    console.log(op.valueOf(document.getElementById('singleCheckbox')))
+    console.log(op.valueOf(document.getElementById('checkbox1')))
+
+    op.valueFor(document.getElementById('singleCheckbox'), {checked: true, enabled: false})
+    op.valueFor(document.getElementById('checkbox1'), {
+      'one': { checked: true, enabled: true },
+      'two': { checked: false, enabled: true },
+      'three': { checked: true, enabled: false },
+      'four': { checked: false, enabled: false }
+    })
+  </script>
+</head>
+
+<body>
+  <form id="export" action="#">
+    <fieldset>
+      <legend>Dropdown</legend>
+      <select id="select1" name="select1name" data-exportkey="select1key">
+        <option>First</option>
+        <option selected>Second</option>
+        <option>Third</option>
+      </select>
+    </fieldset>
+    <fieldset>
+      <legend>MultiSelect</legend>
+      <select id="select2" name="select2name" data-exportkey="select2key" multiple>
+        <option>First</option>
+        <option selected>Second</option>
+        <option>Third</option>
+        <option selected>Forth</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend>Single Checkbox</legend>
+      <label for="singleCheckbox">Checkbox</label>
+      <input type="checkbox" name="singleCheckbox" id="singleCheckbox" value="onlyOne" />
+    </fieldset>
+
+    <fieldset>
+      <legend>Group of Checkboxes</legend>
+      <label for="checkbox1">Checkbox 1</label>
+      <input type="checkbox" name="checkboxgroup" id="checkbox1" value="one" />
+      <label for="checkbox2">Checkbox 2</label>
+      <input type="checkbox" name="checkboxgroup" id="checkbox2" value="two" />
+    </fieldset>
+  </form>
+</body>
+</html>

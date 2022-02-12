@@ -1,0 +1,22 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="filenamepattern" value="notExists" />
+  <title>Test page FormControls</title>
+  <script type="module">
+    import component from '../../../main/scripts/components/formControls.mjs'
+    window.customElements.define('sit-formcontrols', component)
+  </script>
+</head>
+
+<body>
+  <h1>Basic</h1>
+  <form id="basicTest" action="#">
+    <sit-formcontrols><span>Test</span></sit-formcontrols>
+    <input type="text" name="testtextinput" value="Test Text" />
+    <input type="text" name="hiddentextinput" value="I'm hidden" hidden />
+  </form>
+</body>
+</html>

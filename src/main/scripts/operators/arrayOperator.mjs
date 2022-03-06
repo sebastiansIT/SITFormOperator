@@ -279,10 +279,10 @@ function isValidArray (array) {
  * and attribute values to add the index number.
  * <ol><li>add a data attribute **index** to the newArrayItem</li>
  * <li>prefix the text content in child element with ID <strong>name</strong> with the index</li>
- * <li>replace *{{nr}}* inside of the attributes <strong>for</strong>,
+ * <li>replace *{{no}}* inside of the attributes <strong>for</strong>,
  * <strong>id</strong>, <strong>name</strong>,
  * <strong>aria-label</strong>, <strong>aria-labelledby</strong></li>
- * <li>replace *{{nr}}* in **legend** elements content</li></ol>.
+ * <li>replace *{{no}}* in **legend** elements content</li></ol>.
  *
  * @param {external:HTMLElement} newArrayItem The DOM element that represents
  * an array item.
@@ -303,59 +303,64 @@ function populateTemplate (newArrayItem, index) {
   })
 
   // HTML-Attribute for
-  elementWithTemplateAttributes = template.querySelectorAll('[for*="{{nr}}"]')
+  elementWithTemplateAttributes = template.querySelectorAll('[for*="{{no}}"]')
   elementWithTemplateAttributes.forEach(element => {
-    element.attributes.for.textContent = element.attributes.for.textContent.replace('{{nr}}', 'nr' + index)
+    element.attributes.for.textContent = element.attributes.for.textContent.replace('{{no}}', 'no' + index)
   })
 
   // HTML-Attribute ID
   if (template.attributes.id) {
-    template.attributes.id.textContent = template.attributes.id.textContent.replace('{{nr}}', 'nr' + index)
+    template.attributes.id.textContent = template.attributes.id.textContent.replace('{{no}}', 'no' + index)
   }
-  elementWithTemplateAttributes = template.querySelectorAll('[id*="{{nr}}"]')
+  elementWithTemplateAttributes = template.querySelectorAll('[id*="{{no}}"]')
   elementWithTemplateAttributes.forEach(element => {
-    element.attributes.id.textContent = element.attributes.id.textContent.replace('{{nr}}', 'nr' + index)
+    element.attributes.id.textContent = element.attributes.id.textContent.replace('{{no}}', 'no' + index)
   })
 
   // HTML-Attribute name
   if (template.name) {
-    template.name = template.name.replace('{{nr}}', 'nr' + index)
+    template.name = template.name.replace('{{no}}', 'no' + index)
   }
-  elementWithTemplateAttributes = template.querySelectorAll('[name*="{{nr}}"]')
+  elementWithTemplateAttributes = template.querySelectorAll('[name*="{{no}}"]')
   elementWithTemplateAttributes.forEach(element => {
-    element.attributes.name.textContent = element.attributes.name.textContent.replace('{{nr}}', 'nr' + index)
+    element.attributes.name.textContent = element.attributes.name.textContent.replace('{{no}}', 'no' + index)
   })
 
   // HTML-Attribute title
   if (template.title) {
-    template.title = template.title.replace('{{nr}}', 'nr' + index)
+    template.title = template.title.replace('{{no}}', 'no' + index)
   }
-  elementWithTemplateAttributes = template.querySelectorAll('[title*="{{nr}}"]')
+  elementWithTemplateAttributes = template.querySelectorAll('[title*="{{no}}"]')
   elementWithTemplateAttributes.forEach(element => {
-    element.attributes.title.textContent = element.attributes.title.textContent.replace('{{nr}}', index)
+    element.attributes.title.textContent = element.attributes.title.textContent.replace('{{no}}', index)
   })
 
   // ARIA-Attribute label
   if (template.attributes['aria-label']) {
-    template.attributes['aria-label'].textContent = template.attributes['aria-label'].textContent.replace('{{nr}}', index)
+    template.attributes['aria-label'].textContent = template.attributes['aria-label'].textContent.replace('{{no}}', index)
   }
-  elementWithTemplateAttributes = template.querySelectorAll('[aria-label*="{{nr}}"]')
+  elementWithTemplateAttributes = template.querySelectorAll('[aria-label*="{{no}}"]')
   elementWithTemplateAttributes.forEach(element => {
     element.attributes['aria-label'].textContent =
-      element.attributes['aria-label'].textContent.replace('{{nr}}', index)
+      element.attributes['aria-label'].textContent.replace('{{no}}', index)
   })
 
   // ARIA-Attribute labelledby
-  elementWithTemplateAttributes = template.querySelectorAll('[aria-labelledby*="{{nr}}"]')
+  const LABELLEdBY_SELEKTOR = '[aria-labelledby*="{{no}}"]'
+  if (template.matches(LABELLEdBY_SELEKTOR)) {
+    template.attributes['aria-labelledby'].textContent =
+      template.attributes['aria-labelledby'].textContent.replaceAll('{{no}}', 'no' + index)
+  }
+  elementWithTemplateAttributes = template.querySelectorAll(LABELLEdBY_SELEKTOR)
   elementWithTemplateAttributes.forEach(element => {
     element.attributes['aria-labelledby'].textContent =
-      element.attributes['aria-labelledby'].textContent.replace('{{nr}}', 'nr' + index)
+      element.attributes['aria-labelledby'].textContent.replaceAll('{{no}}', 'no' + index)
   })
 
   // Text Content in HTML-Elements legend
   elementWithTemplateAttributes = template.querySelectorAll('legend')
   elementWithTemplateAttributes.forEach(element => {
-    element.textContent = element.textContent.replace('{{nr}}', index)
+    element.textContent = element.textContent.replace('{{no}}', index)
   })
 }
 

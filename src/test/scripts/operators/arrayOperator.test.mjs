@@ -145,7 +145,7 @@ test('importData should import data into a simple form array', () => {
   document.body.innerHTML =
     '<section id="array" data-arrayselector=".arrayitems">' +
     '  <template>' +
-    '    <input type="text" name="item_{{nr}}" data-exportkey="item" value="" />' +
+    '    <input type="text" name="item_{{no}}" data-exportkey="item" value="" />' +
     '  </template>' +
     '  <div class="arrayitems">' +
     '    <input type="text" name="item_1" data-exportkey="item" value="predefined" />' +
@@ -169,7 +169,7 @@ test('importData should import data into a complex form array', () => {
   document.body.innerHTML =
     '<section id="array" data-arrayselector=".arrayitems">' +
     '  <template>' +
-    '    <li><input type="text" name="item_{{nr}}" data-exportkey="item" value="" /></li>' +
+    '    <li><input type="text" name="item_{{no}}" data-exportkey="item" value="" /></li>' +
     '  </template>' +
     '  <ul class="arrayitems">' +
     '    <li><input type="text" name="item_1" data-exportkey="item" value="predefined" /></li>' +
@@ -193,7 +193,7 @@ test('importData should remove excess array items from DOM', () => {
   document.body.innerHTML =
     '<section id="array" data-arrayselector=".arrayitems">' +
     '  <template>' +
-    '    <input type="text" name="item_{{nr}}" data-exportkey="item" value="" />' +
+    '    <input type="text" name="item_{{no}}" data-exportkey="item" value="" />' +
     '  </template>' +
     '  <div class="arrayitems">' +
     '    <input type="text" name="item_1" data-exportkey="item" value="predefined" />' +
@@ -216,7 +216,7 @@ test('importData should add missing array items to DOM', () => {
   document.body.innerHTML =
     '<section id="array" data-arrayselector=".arrayitems">' +
     '  <template>' +
-    '    <input type="text" name="item_{{nr}}" data-exportkey="item" value="" />' +
+    '    <input type="text" name="item_{{no}}" data-exportkey="item" value="" />' +
     '  </template>' +
     '  <div class="arrayitems">' +
     '  </div>' +
@@ -238,7 +238,7 @@ test('full qualified key of an entry should build with an index', () => {
   document.body.innerHTML =
     '<section id="array" data-arrayselector=".arrayitems">' +
     '  <template>' +
-    '    <input type="text" name="item_{{nr}}" data-exportkey="item" value="" />' +
+    '    <input type="text" name="item_{{no}}" data-exportkey="item" value="" />' +
     '  </template>' +
     '  <div class="arrayitems">' +
     '    <input type="text" name="item_1" id="item_1" data-exportkey="item" value="" />' +
@@ -257,7 +257,7 @@ test('throw an error if the entry is not inside of an array item', () => {
   document.body.innerHTML =
     '<section id="array" data-arrayselector=".arrayitems">' +
     '  <template>' +
-    '    <input type="text" name="item_{{nr}}" data-exportkey="item" value="" />' +
+    '    <input type="text" name="item_{{no}}" data-exportkey="item" value="" />' +
     '  </template>' +
     '  <div class="arrayitems">' +
     '    <input type="text" name="item_1" id="item_1" data-exportkey="item" value="" />' +
@@ -276,9 +276,9 @@ test('throw an error if the entry is inside of an subarray', () => {
   document.body.innerHTML =
     '<section id="array" data-arrayselector=".arrayitems">' +
     '  <template>' +
-    '    <section id="innerarray_{{nr}}" data-arrayselector=".arrayitems">' +
+    '    <section id="innerarray_{{no}}" data-arrayselector=".arrayitems">' +
     '      <template>' +
-    '        <input type="text" name="inneritem_{{nr}}" data-exportkey="inneritem" value="" />' +
+    '        <input type="text" name="inneritem_{{no}}" data-exportkey="inneritem" value="" />' +
     '      </template>' +
     '      <div class="arrayitems">' +
     '      </div>' +
@@ -287,7 +287,7 @@ test('throw an error if the entry is inside of an subarray', () => {
     '  <div class="arrayitems">' +
     '    <section id="innerarray_1" data-arrayselector=".arrayitems">' +
     '      <template>' +
-    '        <input type="text" name="inneritem_{{nr}}" data-exportkey="inneritem" value="" />' +
+    '        <input type="text" name="inneritem_{{no}}" data-exportkey="inneritem" value="" />' +
     '      </template>' +
     '      <div class="arrayitems">' +
     '        <input type="text" name="inneritem_1" id="item_1" data-exportkey="inneritem" value="" />' +
@@ -303,13 +303,13 @@ test('throw an error if the entry is inside of an subarray', () => {
 })
 
 /* ========================================================== */
-/* ====================== elementBy() =====)================= */
+/* ====================== elementBy() ======================= */
 /* ========================================================== */
 test('element should found by full qualified key', () => {
   document.body.innerHTML =
     '<section id="array" data-arrayselector=".arrayitems">' +
     '  <template>' +
-    '    <div><input type="text" name="item_{{nr}}" data-exportkey="item" value="" /></div>' +
+    '    <div><input type="text" name="item_{{no}}" data-exportkey="item" value="" /></div>' +
     '  </template>' +
     '  <div class="arrayitems">' +
     '    <div><input type="text" name="item_1" id="item_1" data-exportkey="item" value="" /></div>' +
@@ -322,4 +322,32 @@ test('element should found by full qualified key', () => {
   const entry = document.getElementById('item_2')
 
   expect(operator.elementBy('2/item', array)).toEqual(entry)
+})
+
+/* ========================================================== */
+/* ==================== add Item Listner ==================== */
+/* ========================================================== */
+test('when adding a item replaces placeholders in aria-labelledby attributes', () =>{
+  document.body.innerHTML =
+    '<section id="array" data-arrayselector=".arrayitems">' +
+    '  <template>' +
+    '    <div aria-labelledby="a_{{no}} b_{{no}}">' +
+    '      <input class="first" type="text" aria-labelledby="y d_{{no}} e_{{no}}" name="item_{{no}}" data-exportkey="item" value="" />' +
+    '      <input class="second" type="text" aria-labelledby="f_{{no}} g_{{no}} x" name="item_{{no}}" data-exportkey="item" value="" />' +
+    '    </div>' +
+    '  </template>' +
+    '  <div class="arrayitems">' +
+    '  </div>' +
+    '  <button id="addbutton" class="arrayitemcreate" type=button">add</button>' +
+    '</section>'
+
+  document.getElementById('addbutton').click()
+  document.getElementById('addbutton').click()
+
+  const itemcontainer = document.querySelector('.arrayitems')
+  const secondItem = itemcontainer.children[1]
+  expect(itemcontainer.childElementCount).toEqual(2)
+  expect(secondItem.attributes['aria-labelledby'].value).toEqual('a_no2 b_no2')
+  expect(secondItem.querySelector('.first').attributes['aria-labelledby'].value).toEqual('y d_no2 e_no2')
+  expect(secondItem.querySelector('.second').attributes['aria-labelledby'].value).toEqual('f_no2 g_no2 x')
 })

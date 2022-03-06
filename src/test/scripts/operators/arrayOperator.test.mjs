@@ -302,6 +302,39 @@ test('throw an error if the entry is inside of an subarray', () => {
   expect(() => operator.fullQualifiedKeyOf(entry, array)).toThrow()
 })
 
+test('should return the index as fqn of a container as an item', () => {
+  document.body.innerHTML =
+    '<section id="array" data-arrayselector=".arrayitems">' +
+    '  <template>' +
+    '    <section id="iarray_{{no}}" data-arrayselector=".inneritems">' +
+    '      <template><div class="something">' +
+    '        <input type="text" name="inneritem_{{no}}" data-exportkey="inneritem" value="" />' +
+    '      </div></template>' +
+    '      <div class="inneritems">' +
+    '      </div>' +
+    '    </section>' +
+    '  </template>' +
+    '  <div class="arrayitems">' +
+    '    <section id="iarray_1" data-arrayselector=".inneritems">' +
+    '      <template>' +
+    '        <input type="text" name="inneritem_{{no}}" data-exportkey="inneritem" value="" />' +
+    '      </template>' +
+    '      <div class="inneritems">' +
+    '        <div class="something1"><input type="text" name="inneritem_1" id="item_1" data-exportkey="inneritem" value="" /></div>' +
+    '        <div class="something3"><input type="text" name="inneritem_3" id="item_3" data-exportkey="inneritem" value="" /></div>' +
+    '      </div>' +
+    '    <section>' +
+  '</section>'
+
+  const array = document.getElementById('array')
+  const item = document.getElementById('iarray_1')
+  const innerArray = document.getElementById('iarray_1')
+  const innerItem = document.querySelector('.something3')
+
+  expect(operator.fullQualifiedKeyOf(item, array)).toEqual('1/iarray_1')
+  expect(operator.fullQualifiedKeyOf(innerItem, innerArray)).toEqual('2')
+})
+
 /* ========================================================== */
 /* ====================== elementBy() ======================= */
 /* ========================================================== */

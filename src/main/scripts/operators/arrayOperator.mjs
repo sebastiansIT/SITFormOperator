@@ -199,7 +199,6 @@ export function init () {
  * @throws {external:Error} Throws if the entry is not inside of the given Array.
  */
 export function fullQualifiedKeyOf (entryOrContainer, array) {
-  // TODO wenn die Entries ohne umschließendes Element als Item genutzt werden muss der FQK andest gebildet werden
   const items = getItems(array, array.dataset.arrayselector)
   const index = [...items].indexOf(entryOrContainer.closest(getItemSelector(array, array.dataset.arrayselector))) + 1
 
@@ -217,7 +216,11 @@ export function fullQualifiedKeyOf (entryOrContainer, array) {
       throw Error(`The given entry "${entryOp.keyOf(entryOrContainer)}" is not inside of the Array.`)
     }
 
-    return `${index}/${entryOp.keyOf(entryOrContainer)}`
+    if (entryOrContainer.matches(entryOp.ENTRY_SELECTOR)) {
+      return `${index}/${entryOp.keyOf(entryOrContainer)}`
+    } else {
+      return `${index}`
+    }
   }
 }
 
@@ -237,6 +240,28 @@ export function elementBy (fullQualifiedKey, array) {
     // TODO was ist wenn der Inhalt des Items ein Container ist?
     return entryOp.entryBy(parts[1], arrayItem)
   }
+}
+
+/** Create a new array item from a template element inside the given array and
+ * append it to the array.
+ *
+ * @param {external:HTMLElement} array The DOM element that represents an array.
+ * @returns {undefined}
+ */
+export function addArrayItem (array) {
+  const newArrayItem = document.importNode(array.querySelector('template').content, true)
+  const arrayContainer = getItemContainer(array, array.dataset.arrayselector)
+  let index = arrayContainer.childElementCount + 1
+
+  // falls ein manueller Index gesetzt ist diesen anstelle des child element counts verwenden.
+  const lastElement = arrayContainer.lastElementChild
+  if (lastElement && lastElement.dataset.index) {
+    index = parseInt(lastElement.dataset.index) + 1
+  }
+
+  newArrayItem.firstElementChild.classList.add(SHEET_ARRAY_ITEM_HTMLCLASS)
+  populateTemplate(newArrayItem, index)
+  arrayContainer.appendChild(newArrayItem)
 }
 
 /* ========================================================== */
@@ -375,28 +400,6 @@ function populateTemplate (newArrayItem, index) {
   elementWithTemplateAttributes.forEach(element => {
     element.textContent = element.textContent.replace('{{no}}', index)
   })
-}
-
-/** Create a new array item from a template element inside the given array and
- * append it to the array.
- *
- * @param {external:HTMLElement} array The DOM element that represents an array.
- * @returns {undefined}
- */
-function addArrayItem (array) {
-  const newArrayItem = document.importNode(array.querySelector('template').content, true)
-  const arrayContainer = getItemContainer(array, array.dataset.arrayselector)
-  let index = arrayContainer.childElementCount + 1
-
-  // falls ein manueller Index gesetzt ist diesen anstelle des child element counts verwenden.
-  const lastElement = arrayContainer.lastElementChild
-  if (lastElement && lastElement.dataset.index) {
-    index = parseInt(lastElement.dataset.index) + 1
-  }
-
-  newArrayItem.firstElementChild.classList.add(SHEET_ARRAY_ITEM_HTMLCLASS)
-  populateTemplate(newArrayItem, index)
-  arrayContainer.appendChild(newArrayItem)
 }
 
 /** Finds the Element representing the container with all the items.

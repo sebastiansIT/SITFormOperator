@@ -146,3 +146,26 @@ test('importData should import data into a form with a section', () => {
     }
   })
 })
+
+/* ========================================================== */
+/* ====================== elementBy() ======================= */
+/* ========================================================== */
+test('elementBy() should return undefined if array item with index dosn\'t exists', () => {
+  document.body.innerHTML =
+    '<form id="form">' +
+    '<div id="section">' +
+    '<section id="array" data-arrayselector=".arrayitems">' +
+    '  <template>' +
+    '    <div><input type="text" name="item_{{no}}" data-exportkey="item" value="" /></div>' +
+    '  </template>' +
+    '  <div class="arrayitems">' +
+    '    <div><input type="text" name="item_1" id="item_1" data-exportkey="item" value="" /></div>' +
+    '  </div>' +
+    '</section>' +
+    '</div>' +
+    '</form>'
+  const form = document.getElementById('form')
+  console.log(form)
+  expect(operator.entryBy('section', form)).toBeDefined()
+  expect(operator.entryBy('section/array/2/item', form)).toBeUndefined()
+})

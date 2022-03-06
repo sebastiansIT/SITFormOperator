@@ -324,6 +324,22 @@ test('element should found by full qualified key', () => {
   expect(operator.elementBy('2/item', array)).toEqual(entry)
 })
 
+test('elementBy() should return undefined if array item with index dosn\'t exists', () => {
+  document.body.innerHTML =
+    '<section id="array" data-arrayselector=".arrayitems">' +
+    '  <template>' +
+    '    <div><input type="text" name="item_{{no}}" data-exportkey="item" value="" /></div>' +
+    '  </template>' +
+    '  <div class="arrayitems">' +
+    '    <div><input type="text" name="item_1" id="item_1" data-exportkey="item" value="" /></div>' +
+    '  </div>' +
+    '</section>'
+
+  const array = document.getElementById('array')
+  
+  expect(operator.elementBy('2/item', array)).toBeUndefined()
+})
+
 /* ========================================================== */
 /* ==================== add Item Listner ==================== */
 /* ========================================================== */

@@ -80,7 +80,8 @@ export function fullQualifiedKeyOf (entry, form) {
  *
  * @param {string} fullQualifiedKey The full qualified key of an element based on the form.
  * @param {external:HTMLFormElement} form The DOM element representing a form.
- * @returns {external:HTMLFormElement} The DOM element that represents the element with the given key.
+ * @returns {external:HTMLFormElement|undefined} The DOM element that represents the element with the given key
+ *  or undefined if such a element dosn't exists.
  */
 export function entryBy (fullQualifiedKey, form) {
   const sliceIndex = fullQualifiedKey.indexOf('/')
@@ -92,11 +93,15 @@ export function entryBy (fullQualifiedKey, form) {
 
     do {
       const child = contOp.elementBy(childFqk, element)
-      childFqk = childFqk.replace(contOp.fullQualifiedKeyOf(child, element), '')
-      if (childFqk.indexOf('/') === 0) {
-        childFqk = childFqk.slice(1)
+      if (child) {
+        childFqk = childFqk.replace(contOp.fullQualifiedKeyOf(child, element), '')
+        if (childFqk.indexOf('/') === 0) {
+          childFqk = childFqk.slice(1)
+        }
+        element = child
+      } else {
+        return undefined
       }
-      element = child
     } while (childFqk.indexOf('/') > -1)
 
     if (childFqk.length > 0) {

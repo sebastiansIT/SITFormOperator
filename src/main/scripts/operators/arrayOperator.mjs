@@ -205,14 +205,18 @@ export function fullQualifiedKeyOf (entryOrContainer, array) {
  *
  * @param {string} fullQualifiedKey The full qualified key of an entry.
  * @param {external:HTMLElement} array The DOM element that represents the array containing the given entry.
- * @returns {external:HTMLElement} The DOM element that represents the element with the given key.
+ * @returns {external:HTMLElement|undefined} The DOM element that represents the element with the given key 
+ *  or undefined it no element with the given key exists.
  */
 export function elementBy (fullQualifiedKey, array) {
   // TODO wenn die Entries ohne umschließendes Element als Item genutzt werden muss der Entry direkt aus dem Index genommen werden.
   const parts = fullQualifiedKey.split('/')
   const index = parseInt(parts[0])
-  // TODO was ist wenn der Inhalt des Items ein Container ist?
-  return entryOp.entryBy(parts[1], getItems(array, array.dataset.arrayselector)[index - 1])
+  const arrayItem = getItems(array, array.dataset.arrayselector)[index - 1]
+  if (arrayItem) {
+    // TODO was ist wenn der Inhalt des Items ein Container ist?
+    return entryOp.entryBy(parts[1], arrayItem)
+  }
 }
 
 /* ========================================================== */

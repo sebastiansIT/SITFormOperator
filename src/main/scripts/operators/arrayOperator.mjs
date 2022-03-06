@@ -38,6 +38,9 @@
 import * as contOp from './containerOperator.mjs'
 import * as entryOp from './entryOperator.mjs'
 
+/* ========================================================== */
+/* ================ Modul external constants ================ */
+/* ========================================================== */
 /** A CSS selector that identifies arrays in forms.
  *
  * @constant
@@ -45,6 +48,23 @@ import * as entryOp from './entryOperator.mjs'
  */
 export const ARRAY_SELECTOR = '[data-arrayselector]'
 
+/** A CSS selector that identifies buttons to add new items into an array.
+ *
+ * @constant
+ * @type {string}
+ */
+ export const ITEM_ADD_CONTROL_SELECTOR = '.arrayitemcreate'
+
+ /**  A CSS selector that identifies buttons to remove a item from an array.
+  *
+  * @constant
+  * @type {string}
+  */
+ export const ITEM_REMOVE_CONTROL_SELECTOR = '.arrayitemremove'
+
+/* ========================================================== */
+/* ================ Modul external functions ================ */
+/* ========================================================== */
 /** Gets the key of an array. See
  * {@link module:operators/FormContainerOperator.keyOf|ContainerOperator.keyOf()}
  * for details.
@@ -224,21 +244,10 @@ export function elementBy (fullQualifiedKey, array) {
 /* ========================================================== */
 /** HTML class that will be added to newly created array items.
  *
+ * @constant
  * @type {string}
  */
 const SHEET_ARRAY_ITEM_HTMLCLASS = 'arrayitem'
-
-/** A CSS selector that identifies buttons to add new items into an array.
- *
- * @type {string}
- */
-const ITEM_ADD_CONTROL_SELECTOR = '.arrayitemcreate'
-
-/**  A CSS selector that identifies buttons to remove a item from an array.
- *
- * @type {string}
- */
-const ITEM_REMOVE_CONTROL_SELECTOR = '.arrayitemremove'
 
 /* ========================================================== */
 /* ================ Modul internal functions ================ */

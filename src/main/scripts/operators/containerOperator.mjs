@@ -156,7 +156,7 @@ export function registerContainerTyp (type) {
 
 /** Compute the full qualified key of the given form entry.
  *
- * @param {external:HTMLElement} entryOrContainer The DOM element representing a formular element.
+ * @param {external:HTMLElement} entryOrContainer The DOM element representing a form element.
  * @param {external:HTMLFormElement} root The DOM element representing the root container.
  * @returns {string|undefined} The full qualified key.
  * @throws {external:Error} Throws if the entry is not inside of an Container.

@@ -165,7 +165,45 @@ test('elementBy() should return undefined if array item with index dosn\'t exist
     '</div>' +
     '</form>'
   const form = document.getElementById('form')
-  console.log(form)
   expect(operator.entryBy('section', form)).toBeDefined()
   expect(operator.entryBy('section/array/2/item', form)).toBeUndefined()
+})
+
+/* ========================================================== */
+/* ================= fullQualifiedKeyOf() =================== */
+/* ========================================================== */
+test('should return fqn of an array inside the form', () => {
+  document.body.innerHTML =
+    '<form id="form">' +
+    '<div id="section">' +
+    '<div id="array" data-arrayselector=".arrayitems">' +
+    '  <template>' +
+    '    <div><input type="text" name="item_{{no}}" data-exportkey="item" value="" /></div>' +
+    '  </template>' +
+    '  <div class="arrayitems">' +
+    '    <div><input type="text" name="item_1" id="item_1" data-exportkey="item" value="" /></div>' +
+    '  </div>' +
+    '</div>' +
+    '</div>' +
+    '</form>'
+  const form = document.getElementById('form')
+  expect(operator.fullQualifiedKeyOf(document.getElementById("array"), form)).toBe("section/array")
+})
+
+test('should return fqn of an element inside of an array in the form', () => {
+  document.body.innerHTML =
+    '<form id="form">' +
+    '<div id="section">' +
+    '<div id="array" data-arrayselector=".arrayitems">' +
+    '  <template>' +
+    '    <div><input type="text" name="item_{{no}}" data-exportkey="item" value="" /></div>' +
+    '  </template>' +
+    '  <div class="arrayitems">' +
+    '    <div><input type="text" name="item_1" id="item_1" data-exportkey="item" value="" /></div>' +
+    '  </div>' +
+    '</div>' +
+    '</div>' +
+    '</form>'
+  const form = document.getElementById('form')
+  expect(operator.fullQualifiedKeyOf(document.getElementById("item_1"), form)).toBe("section/array/1/item")
 })

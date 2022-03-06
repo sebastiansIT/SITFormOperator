@@ -55,13 +55,13 @@ export function keyOf (form) {
 
 /** Compute the full qualified key of the given form entry.
  *
- * @param {external:HTMLElement} entry The DOM element representing a form entry.
+ * @param {external:HTMLElement} entryOrContainer The DOM element representing a form element.
  * @param {external:HTMLFormElement} form The DOM element represents a form.
  * @returns {string} The full qualified key.
  */
-export function fullQualifiedKeyOf (entry, form) {
+export function fullQualifiedKeyOf (entryOrContainer, form) {
   let fqk = ''
-  let element = entry
+  let element = entryOrContainer
   let parent = contOp.parentContainerOf(element)
   while (parent && parent !== form) {
     fqk = `${contOp.fullQualifiedKeyOf(element, parent)}${fqk ? '/' : ''}${fqk}`
@@ -69,10 +69,12 @@ export function fullQualifiedKeyOf (entry, form) {
     parent = contOp.parentContainerOf(parent)
   }
 
-  if (element !== entry) {
+  if (element !== entryOrContainer) {
     return `${contOp.keyOf(element)}/${fqk}`
+  } else if (element.matches(contOp.containerSelector())) {
+    return contOp.keyOf(entryOrContainer)
   } else {
-    return entryOp.keyOf(entry)
+    return entryOp.keyOf(entryOrContainer)
   }
 }
 

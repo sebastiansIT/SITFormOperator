@@ -70,10 +70,8 @@ export function fullQualifiedKeyOf (entry, form) {
   }
 
   if (element !== entry) {
-    console.log(entryBy(`${contOp.keyOf(element)}/${fqk}`, form))
     return `${contOp.keyOf(element)}/${fqk}`
   } else {
-    console.log(entryOp.keyOf(entry, form))
     return entryOp.keyOf(entry)
   }
 }

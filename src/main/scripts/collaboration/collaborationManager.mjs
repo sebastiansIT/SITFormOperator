@@ -1,4 +1,4 @@
-/*  Copyright 2021 Sebastian Spautz
+/*  Copyright 2021 - 2022 Sebastian Spautz
 
     This File is Part of "SebastiansIT Form Operator".
 
@@ -16,164 +16,259 @@
 
 /* global Peer */
 
-/** Functions for collaborating on a sheet with multiple users.
+/** Functions for concruent editing a form with multiple users.
  *
  * @module collaboration/CollaborationeManager
  */
 
-import { exportData, importData, fullQualifiedKeyOf } from '../operators/formOperator.mjs'
-import { valueOf } from '../operators/entryOperator.mjs'
+import { exportData, importData, fullQualifiedKeyOf, entryBy } from '../operators/formOperator.mjs'
+import { valueOf, valueFor } from '../operators/entryOperator.mjs'
+import * as arrayop from '../operators/arrayOperator.mjs'
 
 const PEER_OPTIONS = { debug: 1 }
-let selfPeer = null
+let selfPeer = undefined
 
-/**
- *
+function onData (data) {
+  // TODO Exception wenn data nicht da oder command nicht da
+  console.log('Received', data)
+  if (data && data.command) {
+    const form = document.getElementById(data.form)
+    switch (data.command) {
+      case 'init':
+        // {
+        //   command: 'init',
+        //   sender: this.userInformation.name,
+        //   form: form.id,
+        //   content: actualData
+        // }
+        importData(form, data.content)
+        break
+      case 'change':
+        // {
+        //   command: 'change',
+        //   sender: 'Bob',
+        //   form: 'myForm',
+        //   content: { fullQualifiedKey: 'value' }
+        // }
+        Object.keys(data.content).forEach((key, i) => {
+          const entry = entryBy(key, form)
+          if (entry) {
+            valueFor(entry, data.content[key])
+          }
+        })
+        break
+      case 'createArrayItem':
+        // {
+        //   command: 'createArrayItem',
+        //   sender: 'Bob',
+        //   form: 'myForm',
+        //   content: myArrayFQN
+        // }
+        const arrayToAdd = entryBy(data.content, form)
+        if (arrayToAdd) {
+          arrayop.addArrayItem(arrayToAdd)
+        }
+        break
+      case 'deleteArrayItem':
+          // {
+          //   command: 'deleteArrayItem',
+          //   sender: 'Bob',
+          //   form: 'myForm',
+          //   content: myArrayFQN
+          // }
+          const arrayToRemoveFrom = entryBy(data.content, form)
+          if (arrayToRemoveFrom) {
+            arrayToRemoveFrom.parentElement.removeChild(arrayToRemoveFrom)
+          }
+          break
+      default:
+        console.warn('Unknown command received!')
+    }
+  }
+}
+
+/** This class handles connections betwean peers and send form data over the network. 
  */
 export class CollaborationManager {
+  
   /**
-   *
+   * 
    */
   constructor () {
     this.connections = []
+    this.forms = []
     this.userInformation = {
-      name: 'anonymos'
+      name: 'anonymos',
+      peerId: undefined
     }
   }
 
-  /**
-   * Eventhandler for opened peer events.
-   * 1. Saves the actual peer id
-   * @private
-   * @param {string} id - The ID of the peer.
-   * @returns {undefined}
-   */
-  onPeerOpened (id) {
-    this.userInformation.peerId = id
-  }
-
-  /**
-   * @param sheet
-   * @param partialData
-   */
-  onChangeCommand (sheet, partialData) {
-    Object.keys(partialData).forEach((key, i) => {
-      if (Object.prototype.hasOwnProperty.call(partialData, 'key')) {
-        let dataToTransfer
-        key.split('/').reverse().forEach((item, i) => {
-          if (i === 0) {
-            dataToTransfer[item] = partialData[Object.keys(partialData)[0]]
-          } else {
-            const innerData = {}
-            innerData[item] = dataToTransfer
-            dataToTransfer = innerData
-          }
-        })
-        importData(sheet, dataToTransfer)
-      }
-    })
-  }
-
-  /**
-   * Opens the actual sheet for collaboration.
-   * @param {HTMLElement} sheet - The DOM element representing the sheet.
-   * @returns {Promise} A Promise resolved when peer is opend.
-   */
-  openSheet (sheet) {
+  serve () {
     return new Promise((resolve, reject) => {
-      // const peer = new Peer(PEER_OPTIONS)
-      // selfPeer = peer
-      //
-      // peer.on('open', (id) => {
-      //   this.onPeerOpened(id)
-      //   // TODO remove on disconect
-        sheet.addEventListener('change', event => {
-          const changeedData = {}
-          changeedData[fullQualifiedKeyOf(event.target, sheet)] = valueOf(event.target)
-          console.log(changeedData)
-          // send to each connected peer
-          // this.connections.forEach((item, i) => {
-          //   item.send({
-          //     command: 'change',
-          //     sender: this.userInformation.name,
-          //     sheet: changeedData
-          //   })
-          // })
+      if (selfPeer) {
+        reject("This collaboration manager allways serve a connection or is connected to a remote host.")
+      }
+
+      const peer = new Peer(PEER_OPTIONS)
+      selfPeer = peer
+
+      peer.on('open', id => {
+        this.userInformation.peerId = id
+
+        // handle incoming connection from remote peer
+        peer.on('connection', (conn) => {
+          conn.on('open', () => {
+            this.connections.push(conn)
+            console.debug(`${conn.label} is connected`)
+            // send all watched forms to the new connection
+            this.forms.forEach(form => {
+              const actualData = exportData(form)
+              conn.send({
+                command: 'init',
+                sender: this.userInformation.name,
+                form: form.id,
+                content: actualData
+              })
+            })
+          })
+      
+          conn.on('data', onData)
         })
+        
         resolve()
       })
 
-    //   peer.on('connection', (conn) => {
-    //     conn.on('open', () => {
-    //       this.connections.push(conn)
-    //       console.log(conn.label + 'is connected')
-    //       // Initialisiere das Sheet aus Seiten des neuen Peers
-    //       const actualData = exportData(sheet)
-    //       conn.send({
-    //         command: 'init',
-    //         sender: this.userInformation.name,
-    //         sheet: actualData
-    //       })
-    //     })
-    //
-    //     conn.on('data', (data) => {
-    //       // TODO implements commands
-    //       console.log('Received', data)
-    //     })
-    //   })
-    // })
-  }
-
-  /**
-   *
-   */
-  closeSheet () {
-    selfPeer.destroy()
-  }
-
-  /**
-   * Connect the actual sheet for collaboration with a given host.
-   * @param {string} hostPeerId - The ID of the host.
-   * @param {HTMLElement} sheet - The DOM element representing the sheet
-   * @returns {Promise} A Promise resolved when connection is opend.
-   */
-  connectSheet (hostPeerId, sheet) {
-    return new Promise((resolve, reject) => {
-      const peer = new Peer(PEER_OPTIONS)
-      selfPeer = peer
-      peer.on('open', (id) => {
-        this.onPeerOpened(id)
-
-        const conn = peer.connect(hostPeerId, {
-          label: this.userInformation.name
-        })
-        conn.on('open', () => {
-        })
-
-        // Receive messages
-        conn.on('data', (data) => {
-          if (data && data.command) {
-            switch (data.command) {
-              case 'init':
-                importData(sheet, data.sheet)
-                resolve(data.sender)
-                break
-              case 'change':
-                this.onChangeCommand(sheet, data.sheet)
-                break
-              default:
-                console.log('Received', data)
-            }
-          }
-        })
-      })
+      // TODO what if errors occured
     })
   }
 
   /**
-   *
+   * 
    */
-  disconnectSheet () {
+  unserve () {
+    // TODO close all connections 
+    // TODO unwatch all forms
     selfPeer.destroy()
   }
+
+  connect (hostPeerId) {
+    return new Promise((resolve, reject) => {
+      if (selfPeer) {
+        reject("This collaboration manager allways serve a connection or is connected to a remote host.")
+      }
+      const peer = new Peer(PEER_OPTIONS)
+      selfPeer = peer
+      peer.on('open', (id) => {
+        this.userInformation.peerId = id
+        //TODO For testting
+        this.userInformation.name = 'Guest'
+        // Connect to host
+        const conn = peer.connect(hostPeerId, {
+          label: this.userInformation.name
+        })
+        conn.on('open', () => {      
+          this.connections.push(conn)
+          conn.on('data', onData)
+          resolve()
+        })
+
+        // TODO fehlerhandling connection
+        // TODO fehlerhandling peer
+
+        // // Receive messages
+        // conn.on('data', (data) => {
+        //   if (data && data.command) {
+        //     switch (data.command) {
+        //       case 'init':
+        //         importData(sheet, data.sheet)
+        //         resolve(data.sender)
+        //         break
+        //       case 'change':
+        //         this.onChangeCommand(sheet, data.sheet)
+        //         break
+        //       default:
+        //         console.log('Received', data)
+        //     }
+        //   }
+        // })
+      })
+    })
+  }
+
+  disconnect () {
+    // TODO close all connections 
+    // TODO unwatch all forms
+    selfPeer.destroy()
+  }
+
+  /**
+   * Watch the given form for changes.
+   * @param {HTMLFormElement} form - The DOM element representing a form.
+   * @returns {Promise} A Promise resolved when peer is opend.
+   */
+  watchForm (form) {
+    const sendChangeEvent = (function (changedData) {
+      // send to each connected peer
+      this.connections.forEach((item, i) => {
+        item.send({
+          command: 'change',
+          sender: this.userInformation.name,
+          form: form.id,
+          content: changedData
+        })
+      })
+    }).bind(this)
+
+    return new Promise((resolve, reject) => {
+      this.forms.push(form)
+
+      // Changed HTML content editable elements
+      form.addEventListener('input', event => {
+        if (event.target.matches('[contenteditable]')) {
+          // TODO throtle down
+          const changedData = {}
+          changedData[fullQualifiedKeyOf(event.target, form)] = valueOf(event.target)
+          sendChangeEvent(changedData)
+        }
+      })
+      // Changed HTML form elemente
+      form.addEventListener('change', event => {
+        const changedData = {}
+        changedData[fullQualifiedKeyOf(event.target, form)] = valueOf(event.target)
+        sendChangeEvent(changedData)
+      })
+
+      document.addEventListener('click', event => {
+        // Handle buttons to remove array items
+        if (event.target.matches(arrayop.ITEM_REMOVE_CONTROL_SELECTOR)) {
+          const array = event.target.closest(arrayop.ARRAY_SELECTOR)
+          const arrayItem = event.target.closest(array.dataset.arrayselector + ' > *')
+          //arrayItem.parentElement.removeChild(arrayItem)
+          this.connections.forEach((item, i) => {
+            item.send({
+              command: 'deleteArrayItem',
+              sender: this.userInformation.name,
+              form: form.id,
+              content: fullQualifiedKeyOf(arrayItem, form)
+            })
+          })
+        }
+        // Handle buttons to add array items
+        if (event.target.matches(arrayop.ITEM_ADD_CONTROL_SELECTOR)) {
+          this.connections.forEach((item, i) => {
+            item.send({
+              command: 'createArrayItem',
+              sender: this.userInformation.name,
+              form: form.id,
+              content: fullQualifiedKeyOf(event.target.closest(arrayop.ARRAY_SELECTOR), form)
+            })
+          })
+        }
+      }, true)
+
+      resolve()
+    })
+  }
+
+  // TODO unwatch
 }

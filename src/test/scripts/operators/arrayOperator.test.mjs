@@ -357,6 +357,25 @@ test('element should found by full qualified key', () => {
   expect(operator.elementBy('2/item', array)).toEqual(entry)
 })
 
+test('item container should found by full qualified key', () => {
+  document.body.innerHTML =
+    '<section id="array" data-arrayselector=".arrayitems">' +
+    '  <template>' +
+    '    <div><input type="text" name="item_{{no}}" data-exportkey="item" value="" /></div>' +
+    '  </template>' +
+    '  <div class="arrayitems">' +
+    '    <div><input type="text" name="item_1" id="item_1" data-exportkey="item" value="" /></div>' +
+    '    <div class="toTest"><input type="text" name="item_2" id="item_2" data-exportkey="item" value="" /></div>' +
+    '    <div><input type="text" name="item_3" id="item_3" data-exportkey="item" value="" /></div>' +
+    '  </div>' +
+    '</section>'
+
+  const array = document.getElementById('array')
+  const item = document.querySelector('.toTest')
+
+  expect(operator.elementBy('2', array)).toEqual(item)
+})
+
 test('elementBy() should return undefined if array item with index dosn\'t exists', () => {
   document.body.innerHTML =
     '<section id="array" data-arrayselector=".arrayitems">' +

@@ -237,8 +237,12 @@ export function elementBy (fullQualifiedKey, array) {
   const index = parseInt(parts[0])
   const arrayItem = getItems(array, array.dataset.arrayselector)[index - 1]
   if (arrayItem) {
-    // TODO was ist wenn der Inhalt des Items ein Container ist?
-    return entryOp.entryBy(parts[1], arrayItem)
+    if (parts.length === 1) { // the item itself is searched
+      return arrayItem
+    } else {
+      // TODO was ist wenn der Inhalt des Items ein Container ist?
+      return entryOp.entryBy(parts[1], arrayItem)
+    }
   }
 }
 

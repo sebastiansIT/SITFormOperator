@@ -27,6 +27,7 @@ import * as arrayop from '../operators/arrayOperator.mjs'
 
 const PEER_OPTIONS = { debug: 1 }
 let selfPeer = undefined
+let isHub = false
 
 function onData (data) {
   // TODO Exception wenn data nicht da oder command nicht da
@@ -84,6 +85,14 @@ function onData (data) {
       default:
         console.warn('Unknown command received!')
     }
+
+    if (isHub) {
+      this.connections.forEach((connection, i) => {
+        if (connection.label !== data.sender) {
+          connection.send(data)
+        }
+      })
+    }
   }
 }
 
@@ -111,6 +120,7 @@ export class CollaborationManager {
 
       const peer = new Peer(PEER_OPTIONS)
       selfPeer = peer
+      isHub = true
 
       peer.on('open', id => {
         this.userInformation.peerId = id
@@ -132,7 +142,7 @@ export class CollaborationManager {
             })
           })
       
-          conn.on('data', onData)
+          conn.on('data', onData.bind(this))
         })
         
         resolve()
@@ -149,6 +159,7 @@ export class CollaborationManager {
     // TODO close all connections 
     // TODO unwatch all forms
     selfPeer.destroy()
+    isHub = false
   }
 
   connect (hostPeerId) {
@@ -160,8 +171,6 @@ export class CollaborationManager {
       selfPeer = peer
       peer.on('open', (id) => {
         this.userInformation.peerId = id
-        //TODO For testting
-        this.userInformation.name = 'Guest'
         // Connect to host
         const conn = peer.connect(hostPeerId, {
           label: this.userInformation.name
@@ -174,23 +183,6 @@ export class CollaborationManager {
 
         // TODO fehlerhandling connection
         // TODO fehlerhandling peer
-
-        // // Receive messages
-        // conn.on('data', (data) => {
-        //   if (data && data.command) {
-        //     switch (data.command) {
-        //       case 'init':
-        //         importData(sheet, data.sheet)
-        //         resolve(data.sender)
-        //         break
-        //       case 'change':
-        //         this.onChangeCommand(sheet, data.sheet)
-        //         break
-        //       default:
-        //         console.log('Received', data)
-        //     }
-        //   }
-        // })
       })
     })
   }
@@ -243,7 +235,6 @@ export class CollaborationManager {
         if (event.target.matches(arrayop.ITEM_REMOVE_CONTROL_SELECTOR)) {
           const array = event.target.closest(arrayop.ARRAY_SELECTOR)
           const arrayItem = event.target.closest(array.dataset.arrayselector + ' > *')
-          //arrayItem.parentElement.removeChild(arrayItem)
           this.connections.forEach((item, i) => {
             item.send({
               command: 'deleteArrayItem',

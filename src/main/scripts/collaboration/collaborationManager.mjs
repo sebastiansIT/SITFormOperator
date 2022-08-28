@@ -26,9 +26,13 @@ import { valueOf, valueFor } from '../operators/entryOperator.mjs'
 import * as arrayop from '../operators/arrayOperator.mjs'
 
 const PEER_OPTIONS = { debug: 1 }
-let selfPeer = undefined
+let selfPeer
 let isHub = false
 
+/** Handles incoming messages on the WebRTC Data channel.
+ *
+ * @param {*} data The message.
+ */
 function onData (data) {
   // TODO Exception wenn data nicht da oder command nicht da
   console.log('Received', data)
@@ -71,17 +75,17 @@ function onData (data) {
         }
         break
       case 'deleteArrayItem':
-          // {
-          //   command: 'deleteArrayItem',
-          //   sender: 'Bob',
-          //   form: 'myForm',
-          //   content: myArrayFQN
-          // }
-          const arrayToRemoveFrom = entryBy(data.content, form)
-          if (arrayToRemoveFrom) {
-            arrayToRemoveFrom.parentElement.removeChild(arrayToRemoveFrom)
-          }
-          break
+        // {
+        //   command: 'deleteArrayItem',
+        //   sender: 'Bob',
+        //   form: 'myForm',
+        //   content: myArrayFQN
+        // }
+        const arrayToRemoveFrom = entryBy(data.content, form)
+        if (arrayToRemoveFrom) {
+          arrayToRemoveFrom.parentElement.removeChild(arrayToRemoveFrom)
+        }
+        break
       default:
         console.warn('Unknown command received!')
     }
@@ -96,12 +100,11 @@ function onData (data) {
   }
 }
 
-/** This class handles connections betwean peers and send form data over the network. 
+/** This class handles connections betwean peers and send form data over the network.
  */
 export class CollaborationManager {
-  
   /**
-   * 
+   *
    */
   constructor () {
     this.connections = []
@@ -112,10 +115,14 @@ export class CollaborationManager {
     }
   }
 
+  /**
+   *
+   * @returns
+   */
   serve () {
     return new Promise((resolve, reject) => {
       if (selfPeer) {
-        reject("This collaboration manager allways serve a connection or is connected to a remote host.")
+        reject(new Error('This collaboration manager allways serve a connection or is connected to a remote host.'))
       }
 
       const peer = new Peer(PEER_OPTIONS)
@@ -141,10 +148,10 @@ export class CollaborationManager {
               })
             })
           })
-      
+
           conn.on('data', onData.bind(this))
         })
-        
+
         resolve()
       })
 
@@ -153,19 +160,24 @@ export class CollaborationManager {
   }
 
   /**
-   * 
+   *
    */
   unserve () {
-    // TODO close all connections 
+    // TODO close all connections
     // TODO unwatch all forms
     selfPeer.destroy()
     isHub = false
   }
 
+  /**
+   *
+   * @param {*} hostPeerId
+   * @returns
+   */
   connect (hostPeerId) {
     return new Promise((resolve, reject) => {
       if (selfPeer) {
-        reject("This collaboration manager allways serve a connection or is connected to a remote host.")
+        reject(new Error('This collaboration manager allways serve a connection or is connected to a remote host.'))
       }
       const peer = new Peer(PEER_OPTIONS)
       selfPeer = peer
@@ -175,7 +187,7 @@ export class CollaborationManager {
         const conn = peer.connect(hostPeerId, {
           label: this.userInformation.name
         })
-        conn.on('open', () => {      
+        conn.on('open', () => {
           this.connections.push(conn)
           conn.on('data', onData)
           resolve()
@@ -187,19 +199,22 @@ export class CollaborationManager {
     })
   }
 
+  /**
+   *
+   */
   disconnect () {
-    // TODO close all connections 
+    // TODO close all connections
     // TODO unwatch all forms
     selfPeer.destroy()
   }
 
-  /**
-   * Watch the given form for changes.
+  /** Watch the given form for changes.
+   *
    * @param {HTMLFormElement} form - The DOM element representing a form.
    * @returns {Promise} A Promise resolved when peer is opend.
    */
   watchForm (form) {
-    const sendChangeEvent = (function (changedData) {
+    const sendChangeEvent = (changedData) => {
       // send to each connected peer
       this.connections.forEach((item, i) => {
         item.send({
@@ -209,7 +224,7 @@ export class CollaborationManager {
           content: changedData
         })
       })
-    }).bind(this)
+    }
 
     return new Promise((resolve, reject) => {
       this.forms.push(form)

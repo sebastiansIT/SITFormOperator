@@ -53,14 +53,14 @@ export const ARRAY_SELECTOR = '[data-arrayselector]'
  * @constant
  * @type {string}
  */
- export const ITEM_ADD_CONTROL_SELECTOR = '.arrayitemcreate'
+export const ITEM_ADD_CONTROL_SELECTOR = '.arrayitemcreate'
 
- /**  A CSS selector that identifies buttons to remove a item from an array.
+/**  A CSS selector that identifies buttons to remove a item from an array.
   *
   * @constant
   * @type {string}
   */
- export const ITEM_REMOVE_CONTROL_SELECTOR = '.arrayitemremove'
+export const ITEM_REMOVE_CONTROL_SELECTOR = '.arrayitemremove'
 
 /* ========================================================== */
 /* ================ Modul external functions ================ */
@@ -228,7 +228,7 @@ export function fullQualifiedKeyOf (entryOrContainer, array) {
  *
  * @param {string} fullQualifiedKey The full qualified key of an entry.
  * @param {external:HTMLElement} array The DOM element that represents the array containing the given entry.
- * @returns {external:HTMLElement|undefined} The DOM element that represents the element with the given key 
+ * @returns {external:HTMLElement|undefined} The DOM element that represents the element with the given key
  *  or undefined it no element with the given key exists.
  */
 export function elementBy (fullQualifiedKey, array) {
@@ -388,12 +388,12 @@ function populateTemplate (newArrayItem, index) {
   })
 
   // ARIA-Attribute labelledby
-  const LABELLEdBY_SELEKTOR = '[aria-labelledby*="{{no}}"]'
-  if (template.matches(LABELLEdBY_SELEKTOR)) {
+  const LABELLEDBY_SELEKTOR = '[aria-labelledby*="{{no}}"]'
+  if (template.matches(LABELLEDBY_SELEKTOR)) {
     template.attributes['aria-labelledby'].textContent =
       template.attributes['aria-labelledby'].textContent.replaceAll('{{no}}', 'no' + index)
   }
-  elementWithTemplateAttributes = template.querySelectorAll(LABELLEdBY_SELEKTOR)
+  elementWithTemplateAttributes = template.querySelectorAll(LABELLEDBY_SELEKTOR)
   elementWithTemplateAttributes.forEach(element => {
     element.attributes['aria-labelledby'].textContent =
       element.attributes['aria-labelledby'].textContent.replaceAll('{{no}}', 'no' + index)

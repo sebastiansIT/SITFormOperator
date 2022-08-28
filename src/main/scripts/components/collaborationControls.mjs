@@ -108,14 +108,14 @@ template.innerHTML = `
     </div>
 `
 
-/** A Custom Element that should allow basic operations like save, load or reset
- * on forms.
+/** A Custom Element that should allow to set a user name and host a WebRTC-Channel or connect
+ * to such a channel as a client.
  *
  * @class
  * @augments {external:HTMLElement}
  */
 class CollaborationControls extends HTMLElement {
-  /** Constructor for the HTMLElement "FormControls".
+  /** Constructor for the HTMLElement "CollaborationControls".
    */
   constructor () {
     super()

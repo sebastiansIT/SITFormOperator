@@ -41,5 +41,8 @@
     "watch": "npm run watch:js",
     "test": "npm run test:js",
     "build": "npm run doc && npm run build:js"
+  },
+  "dependencies": {
+    "peerjs": "^1.4.7"
   }
 }

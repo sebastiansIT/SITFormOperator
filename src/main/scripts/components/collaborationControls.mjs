@@ -73,36 +73,32 @@ template.innerHTML = `
     </style>
 
     <div class="attention"><slot name="dataProtectionHint">
-        <p>Beachte bitte, wenn du diese Funktion zum gemeinsamen Bearbeiten nutzt, werden 
-            Daten, über die du identifiziert werden könntest, an 
-            <a href="https://peerjs.com/">PeerJS</a> übermittelt.
-            Dies geschieht um die Verbindung zwischen dir und deinen Mitspielern 
-            herzustellen.</p>
-        <p>Wenn du das nicht möchtest, darfst du die Funktion zum gemeinsamen Bearbeiten
-            nicht mit den unten stehenden Schaltflächen aktivieren.</p>
+        <p>Please note: When you use this collaborative editing feature, data that could 
+          identify you is transmitted to <a href="https://peerjs.com/">PeerJS</a>.</p>
+        <p>If you don't agree with this, you must not activate the collaborative editing 
+          function with the buttons below.</p>
     </slot></div>
 
     <div>
-        <p>Wie willst du heute genannt werden?</p>
+        <p><slot name="nicknameIntro">What do you like to be called?</slot></p>
         <span class="formfield">
-            <label for="playername">Dein Name</label>
+            <label for="playername"><slot name="nickname">Nickname</slot></label>
             <input id="playername" type="text" minlength="3" />
         </span>
     </div>
 
     <div class="options">
         <div>
-            <p>Willst du ein Spiel leiten?</p>
-            <button id="control_host" type="button">Spiel starten</button>
-            <p hidden>Die folgende Nummer musst du deinen Mitspielern übermitteln damit 
-            sie sich verbinden können: <span id="hostedgamenumber"></span></p>
+            <p><slot name="hostIntro">Do you want to open this form for collaborative editing?</slot></p>
+            <button id="control_host" type="button"><slot name="buttonStart">Start Collaborating</slot></button>
+            <p hidden><slot name="hostedGameNumber">Your friends need the following ID to connect</slot>: <span id="hostedgamenumber"></span></p>
         </div>
         <div>
-            <p>Willst du an einem Spiel teilnehmen?</p>
+            <p><slot name="connectIntro">Do you want to connect to another persons form?</slot></p>
             <span class="formfield">
-                <label for="gamenumber">Spielnummer</label>
+                <label for="gamenumber">ID</label>
                 <input type="text" id="gamenumber" autocomplete="off" />
-                <button id="control_connect" type="button">Connect</button>
+                <button id="control_connect" type="button"><slot name="buttonConnect">Connect</slot></button>
             </span>
         </div>
     </div>

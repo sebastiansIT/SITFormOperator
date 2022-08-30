@@ -67,7 +67,7 @@ template.innerHTML = `
             border-inline-end: 0.2rem dashed #004600;
         }
         
-        .hostedgamenumber {
+        #hostedgamenumber {
             white-space: nowrap;
         }
     </style>
@@ -158,7 +158,7 @@ class CollaborationControls extends HTMLElement {
           nickname.disabled = true
         })
     }
-    controlHost.addEventListener('keyup', (event) => {
+    controlConnect.addEventListener('keyup', (event) => {
       if (event.key === 'Enter') {
         onStartAsClient(event)
       }

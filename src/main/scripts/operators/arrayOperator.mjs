@@ -33,10 +33,12 @@
  * @module operators/FormArrayOperator
  * @requires operators/ContainerOperator
  * @requires operators/FormEntryOperator
+ * @requires operators/extensions/SortableArray
  */
 
 import * as contOp from './containerOperator.mjs'
 import * as entryOp from './entryOperator.mjs'
+import * as sortableArray from './extensions/sortableArray.mjs'
 
 /* ========================================================== */
 /* ================ Modul external constants ================ */
@@ -164,6 +166,8 @@ export function init () {
     fullQualifiedKeyOf: fullQualifiedKeyOf,
     elementBy: elementBy
   })
+
+  sortableArray.init(ARRAY_SELECTOR)
 
   document.addEventListener('click', event => {
     // Handle buttons to remove array items

@@ -26,8 +26,9 @@ import * as entryOp from './entryOperator.mjs'
  * @requires operators/FormEntryOperator
  */
 
-/**
+/** The CSS selector to identify each type of container.
  *
+ * @returns {string} A CSS selector.
  */
 export function containerSelector () {
   return createContainerSelector()

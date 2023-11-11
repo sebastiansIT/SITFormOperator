@@ -100,7 +100,6 @@ export function loadInitial () {
             return response.json()
           })
           .then(data => {
-            const form = document.querySelector(formOp.FORM_SELECTOR)
             const event = new CustomEvent('loadedSheet', {}) // add form as param
 
             formOp.importData(form, data)

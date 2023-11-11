@@ -21,11 +21,11 @@ const template = document.createElement('template')
 template.innerHTML = `
   <style></style>
 
-  <div>
-    <button type="submit" id="control_save">Save</button>
-    <button type="button" id="control_load">Load</button>
+  <div part="menubar">
+    <button type="submit" id="control_save" part="menuItem">Save</button>
+    <button type="button" id="control_load" part="menuItem">Load</button>
     <slot></slot>
-    <button type="reset"  id="control_new">New</button>
+    <button type="reset" id="control_new" part="menuItem">New</button>
   </div>
 `
 

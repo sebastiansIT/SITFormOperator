@@ -117,7 +117,7 @@ export class CollaborationManager {
 
   /**
    *
-   * @returns
+   * @returns {Promise} A Promise.
    */
   serve () {
     return new Promise((resolve, reject) => {
@@ -172,7 +172,7 @@ export class CollaborationManager {
   /**
    *
    * @param {*} hostPeerId
-   * @returns
+   * @returns {Promise} A Promise.
    */
   connect (hostPeerId) {
     return new Promise((resolve, reject) => {

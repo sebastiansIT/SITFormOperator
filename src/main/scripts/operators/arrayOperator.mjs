@@ -1,4 +1,4 @@
-/*  Copyright 2018, 2021 Sebastian Spautz
+/*  Copyright 2018, 2021, 2023 Sebastian Spautz
 
     This File is Part of "SebastiansIT Form Operator".
 
@@ -189,7 +189,7 @@ export function init () {
       } else {
         array = event.target.closest(ARRAY_SELECTOR)
       }
-      addArrayItem(array)
+      addArrayItem(array, {autofocus: true})
     }
   }, false)
 }
@@ -254,9 +254,11 @@ export function elementBy (fullQualifiedKey, array) {
  * append it to the array.
  *
  * @param {external:HTMLElement} array The DOM element that represents an array.
+ * @param {Object} options Options
+ * @param {boolean} options.autofocus=false Shoud the newly added item be focused?
  * @returns {undefined}
  */
-export function addArrayItem (array) {
+export function addArrayItem (array, options) {
   const newArrayItem = document.importNode(array.querySelector('template').content, true)
   const arrayContainer = getItemContainer(array, array.dataset.arrayselector)
   let index = arrayContainer.childElementCount + 1
@@ -269,7 +271,21 @@ export function addArrayItem (array) {
 
   newArrayItem.firstElementChild.classList.add(SHEET_ARRAY_ITEM_HTMLCLASS)
   populateTemplate(newArrayItem, index)
+  
+  /* If you first add an Element with autofocus to the DOM the focus is set to this new element.
+   * This should not be done if the option "autofocus" isn't set to true. So all HTML attributes
+   * 'autofocus' are removed from the new Item.
+   */
+  if (!options?.autofocus) {
+    newArrayItem.querySelectorAll('[autofocus]').forEach(element => element.removeAttribute('autofocus'))
+  }
+
   arrayContainer.appendChild(newArrayItem)
+  
+  if (options?.autofocus) {
+    arrayContainer.lastElementChild.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
+    arrayContainer.lastElementChild.querySelector('[autofocus]')?.focus()
+  }
 }
 
 /* ========================================================== */

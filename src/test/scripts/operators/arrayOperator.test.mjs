@@ -20,6 +20,12 @@ import * as operator from '../../../main/scripts/operators/arrayOperator.mjs'
 
 operator.init()
 
+beforeEach((done) => {
+  let scrollIntoViewMock = jest.fn()
+  window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock
+  done()
+})
+
 /* ========================================================== */
 /* ===================== ARRAY_SELECTOR ===================== */
 /* ========================================================== */

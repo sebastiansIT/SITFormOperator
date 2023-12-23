@@ -19,14 +19,29 @@ import { FORM_SELECTOR } from '../operators/formOperator.mjs'
 const template = document.createElement('template')
 
 template.innerHTML = `
-  <style></style>
-
+  <style>
+    :host {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+      font-size: 0.8em;
+    }
+    button {
+      font-size: inherit;
+    }
+    #menu_inline_end {
+      flex-grow: 1;
+      text-align: end;
+    }
+  </style>
+  <slot name="before"></slot>
   <div part="menubar">
     <button type="submit" id="control_save" part="menuItem">Save</button>
     <button type="button" id="control_load" part="menuItem">Load</button>
     <slot></slot>
     <button type="reset" id="control_new" part="menuItem">New</button>
   </div>
+  <slot id="menu_inline_end" name="after"></slot>
 `
 
 /** A Custom Element that should allow basic operations like save, load or reset

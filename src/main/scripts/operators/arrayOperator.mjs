@@ -285,6 +285,9 @@ export function addArrayItem (array, options) {
   if (options?.autofocus) {
     arrayContainer.lastElementChild.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
     arrayContainer.lastElementChild.querySelector('[autofocus]')?.focus()
+    if (document.activeElement.hasAttribute('contenteditable') && document.activeElement.getAttribute('contenteditable').valueOf() !== 'off') {
+      window.getSelection().selectAllChildren(document.activeElement)
+    }
   }
 }
 

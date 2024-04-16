@@ -22,8 +22,9 @@ template.innerHTML = `
   <style>
     :host {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 1em;
+      gap: 0.5em;
       font-size: 0.8em;
     }
     button {

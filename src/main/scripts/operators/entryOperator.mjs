@@ -172,6 +172,9 @@ export function valueFor (entry, value) {
   } else {
     entry.value = value
   }
+
+  // Dispatch change event to simulate manual user input.
+  entry.dispatchEvent(new Event('change'))
 }
 
 /** Find the element for the given key inside of the parent element.
